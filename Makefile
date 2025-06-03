@@ -1,12 +1,12 @@
 CC = cc
 CFLAGS = -Wall -Wextra -Werror
-FILES = pipe.c
+FILES = pipe.c stdin_utils.c
 NAME = pipex
 
 all: $(NAME)
 
 $(NAME):
-	$(CC) $(FILES) -o $(NAME)
+	$(CC) $(FILES) libft/libft -o $(NAME)
 
 clean:
 	rm $(NAME)
