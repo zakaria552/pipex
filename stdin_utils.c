@@ -10,23 +10,25 @@ int read_stdin(char **buff)
     return 1;
 }
 
-int read_write_fd(int read_fd, int write_fd)
+ssize_t read_write_file(int fd, int write_fd)
 {
+    char buff[BUFFER_SIZE + 1];
+    ssize_t written_bytes;
     ssize_t bytes_read;
-    char *buff;
-
-    bytes_read = 0;
-    while (true)
+    
+    ft_memset(buff, 0, BUFFER_SIZE);
+    bytes_read = read(fd, buff, BUFFER_SIZE);
+    written_bytes = bytes_read;
+    while (bytes_read > 0)
     {
-        buff = get_next_line(read_fd);
-        if (!buff)
-            break;
-        bytes_read += ft_strlen(buff);
         if (write(write_fd, buff, bytes_read) < 0)
             return -1;
-        free(buff);
+        ft_memset(buff, 0, bytes_read);
+        bytes_read = read(fd, buff, BUFFER_SIZE);
+        written_bytes+= bytes_read;
     }
-    if (bytes_read < 0)
+    if (bytes_read < 0 )
         return -1;
-    return 1;
+    return (written_bytes);
 }
+
