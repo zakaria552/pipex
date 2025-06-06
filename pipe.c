@@ -162,21 +162,24 @@ void pipex(int argc, t_list *args)
     i = 0;
     while(args && args->next != NULL)
     {
-        printf("[Parent] - iteration-%d\n", i);
+        ft_printf("[Parent] - iteration-%d\n", i);
         pipe(pipes[i+1]);
-        if (pipe(pipes[i+1]) < 0)
-            exit(1);
+        list_open_fds("iteration", i);
         if (fork() == 0)
         {
-            printf("[child-%d] Executing command\n", i);
-            execute(args->content, pipes[i], pipes[i+1]);
+            ft_printf("[child-%d] Executing command\n", i);
+            // list_open_fds("Child", i);
+            execute(args->content, pipes[i], pipes[i+1], i);
         }
+        // wait(NULL);
         close_pipe(pipes[i]);
-        wait(NULL);
-        exit(0);
+        // exit(1);
         args = args->next;
         i++;
     }
+    close(pipes[i][1]);
+    read_write_file(pipes[i][0], 1);
+    wait(NULL);
     close_pipe(pipes[i]);
     // list_open_fds("Parent", 0);
 }
