@@ -19,6 +19,7 @@ ssize_t read_write_file(int fd, int write_fd)
     ft_memset(buff, 0, BUFFER_SIZE);
     bytes_read = read(fd, buff, BUFFER_SIZE);
     written_bytes = bytes_read;
+    ft_printf("Reading-%d to %d\n", fd, write_fd);
     while (bytes_read > 0)
     {
         if (write(write_fd, buff, bytes_read) < 0)
