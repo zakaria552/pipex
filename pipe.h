@@ -29,12 +29,13 @@ t_list *process(int argc, char **args);
 
 void pipex(int argc, t_list *args);
 void close_pipe(int pipe[2]);
+void list_open_fds(char *from, int index);
 
 // helpers
 void print_cmd_list(t_list *head);
 void print_cmd(t_cmd *cmds);
 
 ssize_t read_write_file(int fd, int write_fd);
-void execute(t_cmd *command, int pipe[2], int next_pipe[2]);
+void execute(t_cmd *command, int pipe[2], int next_pipe[2], int i);
 
 #endif
