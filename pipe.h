@@ -10,6 +10,7 @@
 typedef enum s_cmd_type
 {
     INFILE,
+    HERE_DOC,
     OUTFILE,
     CMD,
 } e_command_type;
