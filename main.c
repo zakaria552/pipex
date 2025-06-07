@@ -1,26 +1,26 @@
 #include "pipe.h"
-
+void free_cmd(t_cmd *cmd)
+{
+    free(cmd->path_name);
+    free(cmd->cmd);
+}
 int main(int argc, char **argv)
 {
-    t_list *processed_args;
+    t_list *args_list;
     
 	if (argc < 5)
     {
         perror("Must have atleast 4 arguments");
         exit(-1);
     }
-    processed_args = process(argc, argv);
-    if (!processed_args)
+    args_list = process(argc, argv);
+    if (!args_list)
     {
         perror("Failed to process args");
         exit(-1);
     }
-    print_cmd_list(processed_args);
-    pipex(argc, processed_args);
-    
-    // dup2(fd_in, STDIN_FILENO);
-    // argv+=2;
-    // pipex(argc, argv);
-    ft_lstclear(&processed_args, free);
+    print_cmd_list(args_list);
+    pipex(argc, args_list);
+    ft_lstclear(&args_list, free_cmd);
     return 0;
 }

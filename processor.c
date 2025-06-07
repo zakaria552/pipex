@@ -1,8 +1,17 @@
 #include "pipe.h"
 
 static t_list *process_commands(char *command);
-static t_list *process_infile(char *infile);
+static t_list *process_infile(char **args, int *index, e_command_type type);
 char *format_path(char *command);
+e_command_type get_type(char **args, int argc, int index)
+{
+	if (index == argc - 1)
+		return OUTFILE;
+	else if (index == 1 && !ft_strncmp(args[index], "here_doc", ft_strlen("here_doc")))
+		return HERE_DOC;
+	else
+		return INFILE;
+}
 
 t_list *process(int argc, char **args)
 {
@@ -16,7 +25,7 @@ t_list *process(int argc, char **args)
 	{
 		printf("i:%d-%s\n", i, args[i]);
 		if (i == 1 || i == argc - 1)	
-			new_cmd_node = process_infile(args[i]);
+			new_cmd_node = process_infile(args, &i, get_type(args, argc, i));
 		else 
 			new_cmd_node = process_commands(args[i]);
 		if (!new_cmd_node)
@@ -70,14 +79,16 @@ t_list *process_commands(char *command)
 	processed = ft_lstnew(cmd);
 	return (processed);
 }
-t_list *process_infile(char *infile)
+t_list *process_infile(char **args, int *index, e_command_type type)
 {
 	t_list *processed;
 	t_cmd *cmd;
 
-	cmd = malloc(sizeof(t_cmd)); 
-	cmd->type = INFILE;
-	cmd->path_name = ft_strdup(infile);
+	cmd = malloc(sizeof(t_cmd));
+	cmd->type = type;
+	if (type == HERE_DOC)
+		*index += 1;
+	cmd->path_name = ft_strdup(args[*index]);
 	cmd->cmd = NULL;
 	processed = ft_lstnew(cmd);
 	return (processed);
