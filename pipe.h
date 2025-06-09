@@ -28,7 +28,7 @@ int read_stdin(char **buff);
 int read_write_fd(int read_fd, int write_fd);
 t_list *process(int argc, char **args);
 
-void pipex(int argc, t_list *args);
+void pipex(int num_cmd, t_list *args);
 void close_pipe(int pipe[2]);
 void list_open_fds(char *from, int index);
 
