@@ -33,6 +33,29 @@ bool map_stdin_to_pipe(char *limiter, int pipe[0])
     free(line);
     return true;
 }
+
+bool map_file_to_pipe(t_cmd *cmd, int pipe[2])
+{
+    int fd;
+    
+    if (access(cmd->path_name,  R_OK) < 0){
+        ft_printf("Error: %s", strerror(errno));
+        return false;
+    }
+    fd = open(cmd->path_name, O_RDONLY);
+    if (fd < 0)
+        return false;
+    if (dup2(fd, pipe[0]) < 0)
+    {
+        close(fd);
+        ft_printf("Error: %s", strerror(errno));
+        return false;
+    }
+    close(fd);
+    list_open_fds("Parent", 0);
+    return true;
+}
+
 bool map_infile_to_pipe(t_list **args, int pipe[2])
 {
     t_cmd *cmd;
@@ -41,34 +64,46 @@ bool map_infile_to_pipe(t_list **args, int pipe[2])
     
     list_open_fds("Parent", 0);
     cmd = (*args)->content;
-    if (cmd->type == HERE_DOC)
-    {
-        *args = (*args)->next;
-        return map_stdin_to_pipe(cmd->path_name, pipe);
-    }
-    fd = open(cmd->path_name, O_RDONLY);
-    if (fd < 0)
-        return false;
-    dup2(fd, pipe[0]);
-    close(fd);
-    if (fd < 0)
-        return false;
-    tmp = *args;
     *args = (*args)->next;
-    list_open_fds("Parent", 0);
-    return true;
+    if (cmd->type == HERE_DOC)
+        return map_stdin_to_pipe(cmd->path_name, pipe);
+    else 
+        return map_file_to_pipe(cmd, pipe);
 }
 
 void close_pipe(int pipe[2])
 {
-    // printf("Closing pipe[%d][%d]", pipe[0], pipe[1]);
     close(pipe[0]);
     close(pipe[1]);
 }
 
-void pipex(int argc, t_list *args)
+void dump_to_outfile(t_cmd *cmd, int pipe[2])
 {
-    int pipes[argc - 2][2];
+    int fd;
+
+    if (unlink(cmd->path_name) < 0 && errno != ENOENT)
+    {
+       ft_printf("Failed to unlink file %s: %s ", cmd->path_name, errno);
+       close_pipe(pipe);
+       return;
+    }
+    fd = open(cmd->path_name, O_CREAT | O_WRONLY, 0644);
+    if (fd < 0)
+    {
+        close_pipe(pipe);
+        ft_printf("Failed to open file %s: %s", cmd->path_name, strerror(errno));
+        return ;
+    }
+    close(pipe[1]);
+    if (read_write_file(pipe[0], fd) < 0)
+        ft_printf("Error: %s", strerror(errno));
+    close(fd);
+    close(pipe[0]);
+}
+
+void pipex(int num_cmd, t_list *args)
+{
+    int pipes[num_cmd - 1][2];
     int i;
 
     if (pipe(pipes[0]) < 0 || !map_infile_to_pipe(&args, pipes[0]))
@@ -77,23 +112,16 @@ void pipex(int argc, t_list *args)
     i = 0;
     while(args && args->next != NULL)
     {
-        ft_printf("[Parent] - iteration-%d\n", i);
         pipe(pipes[i+1]);
-        list_open_fds("iteration", i);
         if (fork() == 0)
         {
             ft_printf("[child-%d] Executing command\n", i);
-            // list_open_fds("Child", i);
             execute(args->content, pipes[i], pipes[i+1], i);
         }
-        // wait(NULL);
         close_pipe(pipes[i]);
-        // exit(1);
         args = args->next;
         i++;
     }
-    close(pipes[i][1]);
-    read_write_file(pipes[i][0], 1);
-    wait(NULL);
-    close_pipe(pipes[i]);
+
+    dump_to_outfile(args->content, pipes[i]);
 }
