@@ -3,6 +3,7 @@
 static t_list *process_commands(char *command);
 static t_list *process_infile(char **args, int *index, e_command_type type);
 char *format_path(char *command);
+
 e_command_type get_type(char **args, int argc, int index)
 {
 	if (index == argc - 1)
@@ -91,4 +92,21 @@ t_list *process_infile(char **args, int *index, e_command_type type)
 	cmd->cmd = NULL;
 	processed = ft_lstnew(cmd);
 	return (processed);
+}
+
+void free_cmd(t_cmd *cmd)
+{
+	int i;
+    char **cmd_flags;
+    
+    cmd_flags = cmd->cmd;
+	i = 0;
+	while(cmd_flags && cmd_flags[i])
+    {
+		free(cmd_flags[i]);
+        i++;
+    }
+    free(cmd_flags);
+	free(cmd->path_name);
+    free(cmd);
 }
