@@ -33,10 +33,7 @@ int main(int argc, char **argv)
         ft_lstclear(&args_list, free_cmd);
         exit(1);
     }
-    print_cmd_list(args_list);
-    list_open_fds("Parent", 1);
     pipex(num_cmd, args_list);
-    list_open_fds("Parent", 1);
     ft_lstclear(&args_list, free_cmd);
     return 0;
 }
