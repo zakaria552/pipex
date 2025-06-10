@@ -1,9 +1,20 @@
 #include "pipe.h"
 
-int main(int argc, char **argv)
+void wait_for_child_processes(int *pids, int num_process, int *status)
+{
+    int i;
+
+    i = -1;
+    while (++i < num_process)
+        waitpid(pids[i], status, 0);
+}
+
+int main(int argc, char **argv, char **envp)
 {
     t_list *args_list;
     int num_cmd;
+    int pids[argc - 3];
+    int status;
 
     args_list = process(argc, argv);
     if (!args_list)
@@ -18,7 +29,8 @@ int main(int argc, char **argv)
         ft_lstclear(&args_list, (void *)free_cmd);
         exit(1);
     }
-    pipex(num_cmd, args_list);
+    pipex(num_cmd, args_list, pids);
     ft_lstclear(&args_list, (void *)free_cmd);
-    return 0;
+    wait_for_child_processes(pids, argc - 3, &status);
+    return WEXITSTATUS(status);
 }
