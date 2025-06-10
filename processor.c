@@ -23,7 +23,6 @@ t_list *process(int argc, char **args)
 	cmds = NULL;
 	while (++i < argc)
 	{
-		printf("i:%d-%s\n", i, args[i]);
 		if (i == 1 || i == argc - 1)	
 			new_cmd_node = process_infile(args, &i, get_type(args, argc, i));
 		else 
