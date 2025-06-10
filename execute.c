@@ -9,7 +9,5 @@ void execute(t_cmd *command, int pipe[2], int next_pipe[2], int i)
     close_pipe(pipe);
     close_pipe(next_pipe);
     execve(command->path_name, command->cmd, envp);
-    perror("\nErrored");
-    ft_printf("Failed to execute-->[cmd: %s]", *command->cmd);
     exit(1);
 }
