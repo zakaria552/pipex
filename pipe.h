@@ -7,6 +7,7 @@
 #include <fcntl.h>
 #include <string.h>
 #include "./libft/libft.h"
+#include <sys/wait.h>
 
 typedef enum s_cmd_type
 {
@@ -29,7 +30,7 @@ t_list *process(int argc, char **args);
 void free_cmd(t_cmd *cmd);
 
 // pipe
-void pipex(int num_cmd, t_list *args);
+void pipex(int num_cmd, t_list *args, int *pids);
 
 // pipe utils
 void close_pipe(int pipe[2]);
@@ -46,5 +47,8 @@ void dump_to_outfile(t_cmd *cmd, int pipe[2]);
 
 // execute
 void execute(t_cmd *command, int pipe[2], int next_pipe[2], int i);
+
+// error handler
+void pipe_error(char *msg, int current_pipe[2], int next_pipe[2]);
 
 #endif
