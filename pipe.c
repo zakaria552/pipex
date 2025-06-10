@@ -4,7 +4,7 @@ static bool map_infile_to_pipe(t_list **args, int pipe[2]);
 static bool map_stdin_to_pipe(char *limiter, int pipe[0], int num_pipes);
 static bool map_file_to_pipe(t_cmd *cmd, int pipe[2]);
 
-void pipex(int num_cmd, t_list *args)
+void pipex(int num_cmd, t_list *args, int *pids)
 {
     int pipes[num_cmd - 1][2];
     int i;
@@ -15,17 +15,16 @@ void pipex(int num_cmd, t_list *args)
     while(args && args->next != NULL)
     {
         if (pipe(pipes[i+1]) < 0)
-        {
-            close_pipe(pipes[i]);
-            return;
-        }
-        if (fork() == 0)
+            return pipe_error("failed to open pipe", pipes[i], pipes[i+1]);
+        pids[i] = fork();
+        if (pids[i] < 0)
+            return pipe_error("failed to create process", pipes[i], pipes[i+1]);
+        if (pids[i] == 0)
             execute(args->content, pipes[i], pipes[i+1], i);
         close_pipe(pipes[i]);
         args = args->next;
         i++;
     }
-
     dump_to_outfile(args->content, pipes[i]);
 }
 
