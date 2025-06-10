@@ -1,6 +1,5 @@
 #include "pipe.h"
 
-
 char *get_enum_type(e_command_type type)
 {
 	if (type == INFILE)
@@ -51,3 +50,13 @@ void print_cmd_list(t_list *head)
 	}
 }
 
+void list_open_fds(char *from, int index) {
+    int max_fd = sysconf(_SC_OPEN_MAX);
+
+    printf("Open file descriptors:\n");
+    for (int fd = 0; fd < max_fd; fd++) {
+        if (fcntl(fd, F_GETFD) != -1) {
+            printf("[%s-%d] FD %d is open\n", from, index, fd);
+        }
+    }
+}
