@@ -11,13 +11,23 @@ void list_open_fds(char *from, int index) {
     }
 }
 
-bool map_stdin_to_pipe(char *limiter, int pipe[0])
+void print_doc_input_msg(int num_pipes)
+{
+    int i;
+
+    i = -1;
+    while (++i < num_pipes)
+        ft_printf("pipe ");
+    ft_printf("heredoc> ");
+}
+
+bool map_stdin_to_pipe(char *limiter, int pipe[0], int num_pipes)
 {
     char *line;
-
+    
     while (true)
     {
-        ft_printf("heredoc> ");
+        print_doc_input_msg(num_pipes);
         line = get_next_line(STDIN_FILENO);
         if (!line)
             return false;
@@ -39,7 +49,7 @@ bool map_file_to_pipe(t_cmd *cmd, int pipe[2])
     int fd;
     
     if (access(cmd->path_name,  R_OK) < 0){
-        ft_printf("Error: %s", strerror(errno));
+        ft_printf("zsh: %s: %s", strerror(errno), cmd->path_name);
         return false;
     }
     fd = open(cmd->path_name, O_RDONLY);
@@ -52,7 +62,6 @@ bool map_file_to_pipe(t_cmd *cmd, int pipe[2])
         return false;
     }
     close(fd);
-    list_open_fds("Parent", 0);
     return true;
 }
 
@@ -62,11 +71,10 @@ bool map_infile_to_pipe(t_list **args, int pipe[2])
     t_list *tmp;
     int fd;
     
-    list_open_fds("Parent", 0);
     cmd = (*args)->content;
     *args = (*args)->next;
     if (cmd->type == HERE_DOC)
-        return map_stdin_to_pipe(cmd->path_name, pipe);
+        return map_stdin_to_pipe(cmd->path_name, pipe, ft_lstsize(*args) - 2);
     else 
         return map_file_to_pipe(cmd, pipe);
 }
@@ -108,16 +116,12 @@ void pipex(int num_cmd, t_list *args)
 
     if (pipe(pipes[0]) < 0 || !map_infile_to_pipe(&args, pipes[0]))
         return;
-    print_cmd_list(args);
     i = 0;
     while(args && args->next != NULL)
     {
         pipe(pipes[i+1]);
         if (fork() == 0)
-        {
-            ft_printf("[child-%d] Executing command\n", i);
             execute(args->content, pipes[i], pipes[i+1], i);
-        }
         close_pipe(pipes[i]);
         args = args->next;
         i++;
