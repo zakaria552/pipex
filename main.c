@@ -6,7 +6,7 @@
 /*   By: zfarah <zfarah@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/11 20:12:52 by zfarah            #+#    #+#             */
-/*   Updated: 2025/06/11 20:12:53 by zfarah           ###   ########.fr       */
+/*   Updated: 2025/06/11 21:04:37 by zfarah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,7 @@ void	wait_for_child_processes(int *pids, int num_process, int *status)
 
 	i = -1;
 	while (++i < num_process)
-	{
-		ft_printf("%d: , id: %d\n", i, pids[i]);
 		waitpid(pids[i], status, 0);
-	}
 }
 
 int	main(int argc, char **argv)
@@ -41,7 +38,6 @@ int	main(int argc, char **argv)
 	if (!pids)
 		exit_err("Pipex: Failed to allocate resource", &cmd_list, ENOMEM);
 	pipex(num_cmd, &cmd_list, pids);
-	print_cmd_list(cmd_list);
 	ft_lstclear(&cmd_list, (void *)free_cmd);
 	wait_for_child_processes(pids, num_cmd - 2, &status);
 	free(pids);
