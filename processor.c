@@ -6,16 +6,16 @@
 /*   By: zfarah <zfarah@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/11 20:17:10 by zfarah            #+#    #+#             */
-/*   Updated: 2025/06/11 20:46:18 by zfarah           ###   ########.fr       */
+/*   Updated: 2025/06/11 21:38:46 by zfarah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipe.h"
 
 static t_list	*process_commands(char *command);
-static t_list	*process_infile(char **args, int *index, e_command_type type);
+static t_list	*process_infile(char **args, int *index, t_command_type type);
 char			*format_path(char *command);
-e_command_type	get_cmd_type(char **args, int argc, int index);
+t_command_type	get_cmd_type(char **args, int argc, int index);
 
 t_list	*process(int argc, char **args)
 {
@@ -87,7 +87,7 @@ t_list	*process_commands(char *command)
 	return (processed);
 }
 
-t_list	*process_infile(char **args, int *index, e_command_type type)
+t_list	*process_infile(char **args, int *index, t_command_type type)
 {
 	t_list	*processed;
 	t_cmd	*cmd;
@@ -102,7 +102,7 @@ t_list	*process_infile(char **args, int *index, e_command_type type)
 	return (processed);
 }
 
-e_command_type	get_cmd_type(char **args, int argc, int index)
+t_command_type	get_cmd_type(char **args, int argc, int index)
 {
 	if (index == argc - 1)
 		return (OUTFILE);

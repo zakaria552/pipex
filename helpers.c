@@ -6,13 +6,13 @@
 /*   By: zfarah <zfarah@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/11 21:23:03 by zfarah            #+#    #+#             */
-/*   Updated: 2025/06/11 21:24:36 by zfarah           ###   ########.fr       */
+/*   Updated: 2025/06/11 21:38:46 by zfarah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipe.h"
 
-char	*get_enum_type(e_command_type type)
+char	*get_enum_type(t_command_type type)
 {
 	if (type == INFILE)
 		return ("INFILE");
