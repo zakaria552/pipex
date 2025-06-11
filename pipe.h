@@ -30,7 +30,7 @@ t_list *process(int argc, char **args);
 void free_cmd(t_cmd *cmd);
 
 // pipe
-void pipex(int num_cmd, t_list *args, int *pids);
+void pipex(int num_cmd, t_list **args, int *pids);
 
 // pipe utils
 void close_pipe(int pipe[2]);
@@ -46,9 +46,10 @@ ssize_t read_write_file(int fd, int write_fd);
 void dump_to_outfile(t_cmd *cmd, int pipe[2]);
 
 // execute
-void execute(t_cmd *command, int pipe[2], int next_pipe[2], int i);
+void execute(t_cmd *command, int pipes[][2], t_list **args, int *pids);
 
 // error handler
 void pipe_error(char *msg, int current_pipe[2], int next_pipe[2]);
+void exit_err(char *msg, t_list **cmd_list, int err_code);
 
 #endif
