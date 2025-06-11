@@ -6,7 +6,7 @@
 /*   By: zfarah <zfarah@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/11 21:25:07 by zfarah            #+#    #+#             */
-/*   Updated: 2025/06/11 21:28:49 by zfarah           ###   ########.fr       */
+/*   Updated: 2025/06/11 21:46:11 by zfarah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ void	execute(t_cmd *command, int pipes[][2], t_list **args, int *pids)
 	}
 	close_pipe(current_pipe);
 	close_pipe(next_pipe);
-	execve(command->path_name, command->cmd, envp);
+	execve(command->path_name, command->cmd, (char **) envp);
 	ft_lstclear(args, (void *)free_cmd);
 	free(pids);
 	exit(errno);
