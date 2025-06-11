@@ -19,11 +19,11 @@ int main(int argc, char **argv)
     int status;
 
     args_list = process(argc, argv);
+    if (!args_list)
+        exit_err("Pipex: Failed to process args", NULL, errno);
     num_cmd = ft_lstsize(args_list);
 	if (num_cmd < 4)
         exit_err("Pipex: must have atleast 4 arguments, (here_doc LIMITTER is treated as one argument)", &args_list, EINVAL);
-    if (!args_list)
-        exit_err("Pipex: Failed to process args", NULL, errno);
     pids = ft_calloc(num_cmd - 1, sizeof(int));
     if (!pids)
         exit_err("Pipex: Failed to allocate resource", &args_list, errno);
