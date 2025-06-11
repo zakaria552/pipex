@@ -1,32 +1,36 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   processor.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: zfarah <zfarah@student.hive.fi>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/06/11 20:17:10 by zfarah            #+#    #+#             */
+/*   Updated: 2025/06/11 20:46:18 by zfarah           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "pipe.h"
 
-static t_list *process_commands(char *command);
-static t_list *process_infile(char **args, int *index, e_command_type type);
-char *format_path(char *command);
+static t_list	*process_commands(char *command);
+static t_list	*process_infile(char **args, int *index, e_command_type type);
+char			*format_path(char *command);
+e_command_type	get_cmd_type(char **args, int argc, int index);
 
-e_command_type get_type(char **args, int argc, int index)
+t_list	*process(int argc, char **args)
 {
-	if (index == argc - 1)
-		return OUTFILE;
-	else if (index == 1 && !ft_strncmp(args[index], "here_doc", ft_strlen("here_doc")))
-		return HERE_DOC;
-	else
-		return INFILE;
-}
+	t_list	*cmds;
+	t_list	*new_cmd_node;
+	int		i;
 
-t_list *process(int argc, char **args)
-{
-	t_list *cmds;
-	t_list *new_cmd_node;
-	int i;
-	
 	i = 0;
 	cmds = NULL;
 	while (++i < argc)
 	{
-		if (i == 1 || i == argc - 1)	
-			new_cmd_node = process_infile(args, &i, get_type(args, argc, i));
-		else 
+		if (i == 1 || i == argc - 1)
+			new_cmd_node = process_infile(args, &i, get_cmd_type(args, argc,
+						i));
+		else
 			new_cmd_node = process_commands(args[i]);
 		if (!new_cmd_node)
 		{
@@ -36,19 +40,20 @@ t_list *process(int argc, char **args)
 		}
 		ft_lstadd_back(&cmds, new_cmd_node);
 	}
-	return cmds;
+	return (cmds);
 }
-char *format_path(char *command)
+
+char	*format_path(char *command)
 {
-	char *path_name;
-	char *tmp;
-	int i;
-	
+	char	*path_name;
+	char	*tmp;
+	int		i;
+
 	i = 0;
 	while (command[i])
 	{
 		if (ft_isspace(command[i]))
-			break;
+			break ;
 		i++;
 	}
 	if (command[i])
@@ -56,34 +61,36 @@ char *format_path(char *command)
 	else
 		path_name = ft_strdup(command);
 	if (!path_name)
-		return NULL;
+		return (NULL);
 	tmp = path_name;
 	path_name = ft_strjoin("/bin/", path_name);
 	free(tmp);
 	return (path_name);
 }
-t_list *process_commands(char *command)
+
+t_list	*process_commands(char *command)
 {
-	t_list *processed;
-	t_cmd *cmd;
+	t_list	*processed;
+	t_cmd	*cmd;
 
 	cmd = malloc(sizeof(t_cmd));
 	if (!cmd)
-		return NULL;
+		return (NULL);
 	cmd->type = CMD;
 	cmd->cmd = ft_split(command, ' ');
 	if (!cmd->cmd)
-		return NULL;
+		return (NULL);
 	cmd->path_name = format_path(command);
 	if (!cmd->path_name)
-		return NULL;
+		return (NULL);
 	processed = ft_lstnew(cmd);
 	return (processed);
 }
-t_list *process_infile(char **args, int *index, e_command_type type)
+
+t_list	*process_infile(char **args, int *index, e_command_type type)
 {
-	t_list *processed;
-	t_cmd *cmd;
+	t_list	*processed;
+	t_cmd	*cmd;
 
 	cmd = malloc(sizeof(t_cmd));
 	cmd->type = type;
@@ -95,19 +102,13 @@ t_list *process_infile(char **args, int *index, e_command_type type)
 	return (processed);
 }
 
-void free_cmd(t_cmd *cmd)
+e_command_type	get_cmd_type(char **args, int argc, int index)
 {
-	int i;
-    char **cmd_flags;
-    
-    cmd_flags = cmd->cmd;
-	i = 0;
-	while(cmd_flags && cmd_flags[i])
-    {
-		free(cmd_flags[i]);
-        i++;
-    }
-    free(cmd_flags);
-	free(cmd->path_name);
-    free(cmd);
+	if (index == argc - 1)
+		return (OUTFILE);
+	else if (index == 1 && !ft_strncmp(args[index], "here_doc",
+			ft_strlen("here_doc")))
+		return (HERE_DOC);
+	else
+		return (INFILE);
 }
