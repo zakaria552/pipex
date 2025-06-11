@@ -2,8 +2,10 @@
 
 void close_pipe(int pipe[2])
 {
-    close(pipe[0]);
-    close(pipe[1]);
+    if (close(pipe[0]) < 0 || close(pipe[1]))
+    {
+       perror("Pipex: ");
+    }
 }
 
 
