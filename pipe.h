@@ -30,7 +30,7 @@ t_list *process(int argc, char **args);
 void free_cmd(t_cmd *cmd);
 
 // pipe
-void pipex(int num_cmd, t_list **args, int *pids);
+void pipex(int num_cmd, t_list **cmd_list, int *pids);
 
 // pipe utils
 void close_pipe(int pipe[2]);
