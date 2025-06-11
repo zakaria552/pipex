@@ -1,91 +1,105 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   pipe.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: zfarah <zfarah@student.hive.fi>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/06/11 20:47:31 by zfarah            #+#    #+#             */
+/*   Updated: 2025/06/11 21:20:38 by zfarah           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "pipe.h"
 
-static bool map_infile_to_pipe(t_list **cmd_list, int pipe[2]);
-static bool map_stdin_to_pipe(char *limiter, int pipe[0], int num_pipes);
-static bool map_file_to_pipe(t_cmd *cmd, int pipe[2]);
+static bool	map_infile_to_pipe(t_list **cmd_list, int pipe[2]);
+static bool	map_stdin_to_pipe(char *limiter, int pipe[0], int num_pipes);
+static bool	map_file_to_pipe(t_cmd *cmd, int pipe[2]);
 
-void pipex(int num_cmd, t_list **cmd_list, int *pids)
+void	pipex(int num_cmd, t_list **cmd_list, int *pids)
 {
-    int pipes[num_cmd - 1][2];
-    t_list *tmp_cmd_list;
-    int i;
+	int		pipes[2][2];
+	t_list	*tmp_cmd_list;
+	int		i;
 
-    tmp_cmd_list = *cmd_list;
-    if (pipe(pipes[0]) < 0)
-        return pipe_error("Pipex: failed to create a pipe", NULL, NULL);
-    map_infile_to_pipe(&tmp_cmd_list, pipes[0]);
-    i = 0;
-    while(tmp_cmd_list && tmp_cmd_list->next != NULL)
-    {
-        if (pipe(pipes[i+1]) < 0)
-            return pipe_error("Pipex: failed to create a pipe", pipes[i], pipes[i+1]);
-        pids[i] = fork();
-        if (pids[i] < 0)
-            return pipe_error("Pipex: failed to create process", pipes[i], pipes[i+1]);
-        if (pids[i] == 0)
-            execute(tmp_cmd_list->content, pipes + i, cmd_list, pids);
-        close_pipe(pipes[i]);
-        tmp_cmd_list = tmp_cmd_list->next;
-        i++;
-    }
-    dump_to_outfile(tmp_cmd_list->content, pipes[i]);
+	tmp_cmd_list = *cmd_list;
+	if (pipe(pipes[0]) < 0)
+		return (pipe_error("Pipex: ", NULL, NULL));
+	map_infile_to_pipe(&tmp_cmd_list, pipes[0]);
+	i = 0;
+	while (tmp_cmd_list && tmp_cmd_list->next != NULL)
+	{
+		if (pipe(pipes[i + 1]) < 0)
+			return (pipe_error("Pipex: ", pipes[i], pipes[i + 1]));
+		pids[i] = fork();
+		if (pids[i] < 0)
+			return (pipe_error("Pipex: ", pipes[i], pipes[i + 1]));
+		if (pids[i] == 0)
+			execute(tmp_cmd_list->content, pipes + i, cmd_list, pids);
+		close_pipe(pipes[i++]);
+		tmp_cmd_list = tmp_cmd_list->next;
+		if (i == 2)
+			i = 0;
+	}
+	dump_to_outfile(tmp_cmd_list->content, pipes[i]);
 }
 
-
-bool map_stdin_to_pipe(char *limiter, int pipe[0], int num_pipes)
+bool	map_stdin_to_pipe(char *limiter, int pipe[0], int num_pipes)
 {
-    char *line;
-    
-    while (true)
-    {
-        print_here_doc_input_msg(num_pipes);
-        line = get_next_line(STDIN_FILENO);
-        if (!line)
-            return false;
-        if (ft_strncmp(line, limiter, ft_strlen(limiter)) == 0)
-            break;
-        if (write(pipe[1], line, ft_strlen(line)) < 0)
-        {
-            free(line);
-            return false;
-        }
-        free(line);
-    }
-    free(line);
-    return true;
+	char	*line;
+
+	while (true)
+	{
+		print_here_doc_input_msg(num_pipes);
+		line = get_next_line(STDIN_FILENO);
+		if (!line)
+			return (false);
+		if (ft_strncmp(line, limiter, ft_strlen(limiter)) == 0)
+			break ;
+		if (write(pipe[1], line, ft_strlen(line)) < 0)
+		{
+			free(line);
+			return (false);
+		}
+		free(line);
+	}
+	free(line);
+	return (true);
 }
 
-bool map_file_to_pipe(t_cmd *cmd, int pipe[2])
+bool	map_file_to_pipe(t_cmd *cmd, int pipe[2])
 {
-    int fd;
-    
-    if (access(cmd->path_name,  R_OK) < 0){
-        ft_printf("Pipex: %s: %s\n", strerror(errno), cmd->path_name);
-        return false;
-    }
-    fd = open(cmd->path_name, O_RDONLY);
-    if (fd < 0)
-        return false;
-    if (dup2(fd, pipe[0]) < 0)
-    {
-        close(fd);
-        perror("Pipex: %s");
-        return false;
-    }
-    close(fd);
-    return true;
+	int	fd;
+
+	if (access(cmd->path_name, R_OK) < 0)
+	{
+		ft_printf("Pipex: %s: %s\n", strerror(errno), cmd->path_name);
+		return (false);
+	}
+	fd = open(cmd->path_name, O_RDONLY);
+	if (fd < 0)
+		return (false);
+	if (dup2(fd, pipe[0]) < 0)
+	{
+		close(fd);
+		perror("Pipex: %s");
+		return (false);
+	}
+	close(fd);
+	return (true);
 }
 
-bool map_infile_to_pipe(t_list **cmd_list, int pipe[2])
+bool	map_infile_to_pipe(t_list **cmd_list, int pipe[2])
 {
-    t_cmd *cmd;
-    t_list *tmp;
-    int fd;
-    
-    cmd = (*cmd_list)->content;
-    *cmd_list = (*cmd_list)->next;
-    if (cmd->type == HERE_DOC)
-        return map_stdin_to_pipe(cmd->path_name, pipe, ft_lstsize(*cmd_list) - 2);
-    else 
-        return map_file_to_pipe(cmd, pipe);
+	t_cmd	*cmd;
+	t_list	*tmp;
+	int		fd;
+
+	cmd = (*cmd_list)->content;
+	*cmd_list = (*cmd_list)->next;
+	if (cmd->type == HERE_DOC)
+		return (map_stdin_to_pipe(cmd->path_name, pipe, ft_lstsize(*cmd_list)
+				- 2));
+	else
+		return (map_file_to_pipe(cmd, pipe));
 }
