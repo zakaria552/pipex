@@ -26,7 +26,7 @@ int main(int argc, char **argv)
         exit_err("Pipex: must have atleast 4 arguments, (here_doc LIMITTER is treated as one argument)", &args_list, EINVAL);
     pids = ft_calloc(num_cmd - 1, sizeof(int));
     if (!pids)
-        exit_err("Pipex: Failed to allocate resource", &args_list, errno);
+        exit_err("Pipex: Failed to allocate resource", &args_list, ENOMEM);
     pipex(num_cmd, &args_list, pids);
     print_cmd_list(args_list);
     ft_lstclear(&args_list, (void *)free_cmd);
