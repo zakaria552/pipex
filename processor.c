@@ -30,6 +30,7 @@ t_list *process(int argc, char **args)
 			new_cmd_node = process_commands(args[i]);
 		if (!new_cmd_node)
 		{
+			errno = ENOMEM;
 			ft_lstclear(&cmds, free);
 			return (NULL);
 		}
