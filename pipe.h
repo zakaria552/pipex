@@ -1,55 +1,70 @@
-#ifndef PIPE_H
-#define PIPE_H
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   pipe.h                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: zfarah <zfarah@student.hive.fi>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/06/11 21:33:38 by zfarah            #+#    #+#             */
+/*   Updated: 2025/06/11 21:38:46 by zfarah           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-#include <errno.h>
-#include <stdio.h>
-#include <unistd.h>
-#include <fcntl.h>
-#include <string.h>
-#include "./libft/libft.h"
-#include <sys/wait.h>
+#ifndef PIPE_H
+# define PIPE_H
+
+# include "./libft/libft.h"
+# include <errno.h>
+# include <fcntl.h>
+# include <stdio.h>
+# include <string.h>
+# include <sys/wait.h>
+# include <unistd.h>
 
 typedef enum s_cmd_type
 {
-    INFILE,
-    HERE_DOC,
-    OUTFILE,
-    CMD,
-} e_command_type;
+	INFILE,
+	HERE_DOC,
+	OUTFILE,
+	CMD,
+}					t_command_type;
 
 typedef struct s_cmd
 {
-    char *path_name;
-    char **cmd;
-    e_command_type type;
-} t_cmd;
-
+	char			*path_name;
+	char			**cmd;
+	t_command_type	type;
+}					t_cmd;
 
 // processor
-t_list *process(int argc, char **args);
-void free_cmd(t_cmd *cmd);
+t_list				*process(int argc, char **args);
+
+// cmd_utils
+void				free_cmd(t_cmd *cmd);
 
 // pipe
-void pipex(int num_cmd, t_list **cmd_list, int *pids);
+void				pipex(int num_cmd, t_list **cmd_list, int *pids);
 
 // pipe utils
-void close_pipe(int pipe[2]);
-void print_here_doc_input_msg(int num_pipes);
+void				close_pipe(int pipe[2]);
+void				print_here_doc_input_msg(int num_pipes);
 
 // helpers
-void print_cmd_list(t_list *head);
-void print_cmd(t_cmd *cmds);
-void list_open_fds(char *from, int index);
+void				print_cmd_list(t_list *head);
+void				print_cmd(t_cmd *cmds);
+void				list_open_fds(char *from, int index);
 
 // io_utils
-ssize_t read_write_file(int fd, int write_fd);
-void dump_to_outfile(t_cmd *cmd, int pipe[2]);
+ssize_t				read_write_file(int fd, int write_fd);
+void				dump_to_outfile(t_cmd *cmd, int pipe[2]);
 
 // execute
-void execute(t_cmd *command, int pipes[][2], t_list **args, int *pids);
+void				execute(t_cmd *command, int pipes[][2], t_list **args,
+						int *pids);
 
 // error handler
-void pipe_error(char *msg, int current_pipe[2], int next_pipe[2]);
-void exit_err(char *msg, t_list **cmd_list, int err_code);
+void				pipe_error(char *msg, int current_pipe[2],
+						int next_pipe[2]);
+void				exit_err(char *msg, t_list **cmd_list, int err_code);
 
 #endif
