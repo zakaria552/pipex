@@ -6,7 +6,7 @@
 /*   By: zfarah <zfarah@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/11 21:33:38 by zfarah            #+#    #+#             */
-/*   Updated: 2025/06/11 21:38:46 by zfarah           ###   ########.fr       */
+/*   Updated: 2025/06/12 15:56:33 by zfarah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,14 +33,20 @@ typedef struct s_cmd
 {
 	char			*path_name;
 	char			**cmd;
+	char			**envp;
 	t_command_type	type;
 }					t_cmd;
 
 // processor
-t_list				*process(int argc, char **args);
+t_list				*process(int argc, char **args, char **envp);
+
+// format_path
+char	*format_path(char *command, char **envp);
 
 // cmd_utils
 void				free_cmd(t_cmd *cmd);
+void	*free_matrix_mem(char **matrix);
+bool cmds_validated(t_list *cmds);
 
 // pipe
 void				pipex(int num_cmd, t_list **cmd_list, int *pids);
@@ -66,5 +72,6 @@ void				execute(t_cmd *command, int pipes[][2], t_list **args,
 void				pipe_error(char *msg, int current_pipe[2],
 						int next_pipe[2]);
 void				exit_err(char *msg, t_list **cmd_list, int err_code);
+void	*set_errno(int err_code);
 
 #endif
