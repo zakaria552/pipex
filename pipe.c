@@ -6,7 +6,7 @@
 /*   By: zfarah <zfarah@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/11 20:47:31 by zfarah            #+#    #+#             */
-/*   Updated: 2025/06/11 21:20:38 by zfarah           ###   ########.fr       */
+/*   Updated: 2025/06/12 17:22:51 by zfarah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ void	pipex(int num_cmd, t_list **cmd_list, int *pids)
 		if (i == 2)
 			i = 0;
 	}
-	dump_to_outfile(tmp_cmd_list->content, pipes[i]);
+	dump_to_outfile(tmp_cmd_list->content, pipes[i], ((t_cmd *)(*cmd_list)->content)->type);
 }
 
 bool	map_stdin_to_pipe(char *limiter, int pipe[0], int num_pipes)
