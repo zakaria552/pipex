@@ -6,7 +6,7 @@
 /*   By: zfarah <zfarah@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/11 20:14:00 by zfarah            #+#    #+#             */
-/*   Updated: 2025/06/11 20:15:03 by zfarah           ###   ########.fr       */
+/*   Updated: 2025/06/12 17:40:26 by zfarah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,17 +34,15 @@ ssize_t	read_write_file(int fd, int write_fd)
 	return (written_bytes);
 }
 
-void	dump_to_outfile(t_cmd *cmd, int pipe[2])
+void	dump_to_outfile(t_cmd *cmd, int pipe[2], t_command_type infile_type)
 {
 	int	fd;
+	int flags;
 
-	if (unlink(cmd->path_name) < 0 && errno != ENOENT)
-	{
-		ft_printf("Failed to unlink file %s: %s ", cmd->path_name, errno);
-		close_pipe(pipe);
-		return ;
-	}
-	fd = open(cmd->path_name, O_CREAT | O_WRONLY, 0644);
+	flags = O_CREAT | O_WRONLY | O_APPEND;
+	if (infile_type != HERE_DOC)
+		flags |= O_TRUNC;
+	fd = open(cmd->path_name, flags, 0644);
 	if (fd < 0)
 	{
 		close_pipe(pipe);
