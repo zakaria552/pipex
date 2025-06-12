@@ -6,7 +6,7 @@
 /*   By: zfarah <zfarah@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/11 21:23:03 by zfarah            #+#    #+#             */
-/*   Updated: 2025/06/11 21:38:46 by zfarah           ###   ########.fr       */
+/*   Updated: 2025/06/12 16:50:51 by zfarah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,10 @@ char	*get_enum_type(t_command_type type)
 {
 	if (type == INFILE)
 		return ("INFILE");
+	if (type == OUTFILE)
+		return ("OUTFILE");
+	if (type == HERE_DOC)
+		return ("HERE_DOC");
 	else if (type == CMD)
 		return ("CMD");
 	else
@@ -58,7 +62,7 @@ void	print_cmd_list(t_list *head)
 			ft_printf("%s ", args[j]);
 			j++;
 		}
-		ft_printf(", name: %s, type: %s]\n", cmds->path_name,
+		ft_printf(", path: %s, type: %s]\n", cmds->path_name,
 			get_enum_type(cmds->type));
 		head = head->next;
 		i++;
