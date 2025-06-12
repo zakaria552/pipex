@@ -6,7 +6,7 @@
 /*   By: zfarah <zfarah@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/11 20:12:52 by zfarah            #+#    #+#             */
-/*   Updated: 2025/06/12 17:00:08 by zfarah           ###   ########.fr       */
+/*   Updated: 2025/06/12 18:15:26 by zfarah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,12 +28,11 @@ int	main(int argc, char **argv, char **envp)
 	int		*pids;
 	int		status;
 
+	validate_num_args(argc, argv);
 	cmd_list = process(argc, argv, envp);
 	if (!cmd_list)
 		exit_err(NULL, NULL, errno);
 	num_cmd = ft_lstsize(cmd_list);
-	if (num_cmd < 4)
-		exit_err("Pipex: must have atleast 4 arguments", &cmd_list, EINVAL);
 	if (!cmds_validated(cmd_list))
 		exit_err(NULL, &cmd_list, errno);
 	pids = ft_calloc(num_cmd - 1, sizeof(int));
