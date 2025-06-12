@@ -6,7 +6,7 @@
 /*   By: zfarah <zfarah@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/11 21:31:32 by zfarah            #+#    #+#             */
-/*   Updated: 2025/06/11 21:31:45 by zfarah           ###   ########.fr       */
+/*   Updated: 2025/06/12 13:57:02 by zfarah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,13 @@ void	exit_err(char *msg, t_list **cmd_list, int err_code)
 	errno = err_code;
 	if (cmd_list)
 		ft_lstclear(cmd_list, (void *)free_cmd);
-	perror(msg);
+	if (msg)
+		perror(msg);
 	exit(errno);
+}
+
+void	*set_errno(int err_code)
+{
+	errno = err_code;
+	return NULL;
 }
