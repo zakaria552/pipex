@@ -6,7 +6,7 @@
 /*   By: zfarah <zfarah@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/11 21:33:38 by zfarah            #+#    #+#             */
-/*   Updated: 2025/06/12 17:24:18 by zfarah           ###   ########.fr       */
+/*   Updated: 2025/06/12 18:14:58 by zfarah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ char	*format_path(char *command, char **envp);
 void				free_cmd(t_cmd *cmd);
 void	*free_matrix_mem(char **matrix);
 bool cmds_validated(t_list *cmds);
+void validate_num_args(int argc, char **args);
 
 // pipe
 void				pipex(int num_cmd, t_list **cmd_list, int *pids);
