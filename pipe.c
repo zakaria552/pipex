@@ -6,7 +6,7 @@
 /*   By: zfarah <zfarah@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/11 20:47:31 by zfarah            #+#    #+#             */
-/*   Updated: 2025/06/12 17:22:51 by zfarah           ###   ########.fr       */
+/*   Updated: 2025/06/12 18:25:04 by zfarah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,14 +47,16 @@ void	pipex(int num_cmd, t_list **cmd_list, int *pids)
 bool	map_stdin_to_pipe(char *limiter, int pipe[0], int num_pipes)
 {
 	char	*line;
+	size_t	len_limitter;
 
+	len_limitter = ft_strlen(limiter);
 	while (true)
 	{
 		print_here_doc_input_msg(num_pipes);
 		line = get_next_line(STDIN_FILENO);
 		if (!line)
 			return (false);
-		if (ft_strncmp(line, limiter, ft_strlen(limiter)) == 0)
+		if (ft_strncmp(line, limiter, len_limitter) == 0 && !line[len_limitter + 1])
 			break ;
 		if (write(pipe[1], line, ft_strlen(line)) < 0)
 		{
