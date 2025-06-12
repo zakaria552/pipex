@@ -6,7 +6,7 @@
 /*   By: zfarah <zfarah@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/11 20:18:38 by zfarah            #+#    #+#             */
-/*   Updated: 2025/06/11 21:30:39 by zfarah           ###   ########.fr       */
+/*   Updated: 2025/06/12 16:47:44 by zfarah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,4 +27,32 @@ void	free_cmd(t_cmd *cmd)
 	free(cmd_flags);
 	free(cmd->path_name);
 	free(cmd);
+}
+
+void	*free_matrix_mem(char **matrix)
+{
+	int	i;
+
+	i = 0;
+	while (matrix[i])
+	{
+		free(matrix[i]);
+		i++;
+	}
+	free(matrix);
+	return (NULL);
+}
+
+bool cmds_validated(t_list *cmds)
+{
+	t_cmd *cmd;
+	
+	while (cmds && cmds->next)
+	{
+		cmd = cmds->content;
+		if (cmd->type == CMD && !cmd->path_name)
+			return (false);
+		cmds = cmds->next;
+	}
+	return (true);
 }
