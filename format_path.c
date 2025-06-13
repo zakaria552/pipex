@@ -6,7 +6,7 @@
 /*   By: zfarah <zfarah@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/12 14:49:04 by zfarah            #+#    #+#             */
-/*   Updated: 2025/06/12 16:41:52 by zfarah           ###   ########.fr       */
+/*   Updated: 2025/06/13 13:47:41 by zfarah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ char *get_exc_path(char **paths, char *cmd)
 	{
 		cmd_path = join_cmd_path(paths[i], cmd);
 		if (!cmd_path)
-			return set_errno(errno);
+			return set_errno(ENOMEM);
 		if (access(cmd_path, X_OK) == 0)
 			return cmd_path;
 		free(cmd_path);
