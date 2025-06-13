@@ -6,7 +6,7 @@
 /*   By: zfarah <zfarah@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/11 20:14:00 by zfarah            #+#    #+#             */
-/*   Updated: 2025/06/13 13:18:11 by zfarah           ###   ########.fr       */
+/*   Updated: 2025/06/13 14:01:27 by zfarah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ ssize_t	read_write_file(int fd, int write_fd)
 void	dump_to_outfile(t_cmd *cmd, int pipe[2], t_command_type infile_type)
 {
 	int	fd;
-	int flags;
+	int	flags;
 
 	flags = O_CREAT | O_WRONLY | O_APPEND;
 	if (infile_type != HERE_DOC)
