@@ -6,7 +6,7 @@
 /*   By: zfarah <zfarah@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/11 20:14:00 by zfarah            #+#    #+#             */
-/*   Updated: 2025/06/13 14:16:01 by zfarah           ###   ########.fr       */
+/*   Updated: 2025/06/13 17:59:24 by zfarah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,13 +47,14 @@ void	dump_to_outfile(t_cmd *outfile_cmd, int pipe[2], t_cmd *infile_cmd)
 	fd = open(outfile_cmd->path_name, flags, 0644);
 	if (fd < 0)
 	{
+		ft_printf("Pipex: %s: %s\n", strerror(errno), outfile_cmd->path_name);
 		close_pipe(pipe);
-		ft_printf("Pipex: ", strerror(errno), outfile_cmd->path_name);
+		set_errno(1);
 		return ;
 	}
 	close(pipe[1]);
 	if (read_write_file(pipe[0], fd) < 0)
-		ft_printf("Pipex: %s", strerror(errno));
+		ft_printf("Pipex: %s\n", strerror(errno));
 	close(fd);
 	close(pipe[0]);
 }
