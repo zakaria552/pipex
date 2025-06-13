@@ -6,7 +6,7 @@
 /*   By: zfarah <zfarah@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/11 20:18:38 by zfarah            #+#    #+#             */
-/*   Updated: 2025/06/12 20:07:54 by zfarah           ###   ########.fr       */
+/*   Updated: 2025/06/13 13:58:15 by zfarah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,10 +43,10 @@ void	*free_matrix_mem(char **matrix)
 	return (NULL);
 }
 
-bool cmds_validated(t_list *cmds)
+bool	cmds_validated(t_list *cmds)
 {
-	t_cmd *cmd;
-	
+	t_cmd	*cmd;
+
 	while (cmds && cmds->next)
 	{
 		cmd = cmds->content;
@@ -57,18 +57,18 @@ bool cmds_validated(t_list *cmds)
 	return (true);
 }
 
-void validate_num_args(int argc, char **args)
+void	validate_num_args(int argc, char **args)
 {
-	bool is_here_doc;
- 
+	bool	is_here_doc;
+
 	if (argc > 1 && ft_strncmp(args[1], "here_doc", ft_strlen("here_doc")) == 0)
 		is_here_doc = true;
-	else 
+	else
 		is_here_doc = false;
-
 	if (is_here_doc && argc - 1 < 5)
-		exit_err("Pipex: Usage ./pipex here_doc LIMITER cmd1 cmd2 ... outfile", NULL, EINVAL);
+		exit_err("Pipex: Usage ./pipex here_doc LIMITER cmd1 cmd2 ... outfile",
+			NULL, EINVAL);
 	else if (argc - 1 < 4)
-		exit_err("Pipex: Usage ./pipex infile cmd1 cmd2 ... outfile", NULL, EINVAL);
-
+		exit_err("Pipex: Usage ./pipex infile cmd1 cmd2 ... outfile", NULL,
+			EINVAL);
 }
