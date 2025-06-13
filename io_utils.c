@@ -6,7 +6,7 @@
 /*   By: zfarah <zfarah@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/11 20:14:00 by zfarah            #+#    #+#             */
-/*   Updated: 2025/06/13 14:01:27 by zfarah           ###   ########.fr       */
+/*   Updated: 2025/06/13 14:11:52 by zfarah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,19 +34,21 @@ ssize_t	read_write_file(int fd, int write_fd)
 	return (written_bytes);
 }
 
-void	dump_to_outfile(t_cmd *cmd, int pipe[2], t_command_type infile_type)
+void	dump_to_outfile(t_cmd *outfile_cmd, int pipe[2], t_cmd *infile_cmd)
 {
 	int	fd;
 	int	flags;
+	t_command_type infile_type;
 
+	infile_type = infile_cmd->type;
 	flags = O_CREAT | O_WRONLY | O_APPEND;
 	if (infile_type != HERE_DOC)
 		flags |= O_TRUNC;
-	fd = open(cmd->path_name, flags, 0644);
+	fd = open(outfile_cmd->path_name, flags, 0644);
 	if (fd < 0)
 	{
 		close_pipe(pipe);
-		ft_printf("Pipex: ", strerror(errno), cmd->path_name);
+		ft_printf("Pipex: ", strerror(errno), outfile_cmd->path_name);
 		return ;
 	}
 	close(pipe[1]);

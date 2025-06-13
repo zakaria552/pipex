@@ -6,7 +6,7 @@
 /*   By: zfarah <zfarah@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/11 21:33:38 by zfarah            #+#    #+#             */
-/*   Updated: 2025/06/13 13:53:09 by zfarah           ###   ########.fr       */
+/*   Updated: 2025/06/13 14:12:31 by zfarah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ void				list_open_fds(char *from, int index);
 
 // io_utils
 ssize_t				read_write_file(int fd, int write_fd);
-void				dump_to_outfile(t_cmd *cmd, int pipe[2], t_command_type infile_type);
+void				dump_to_outfile(t_cmd *outfile_cmd, int pipe[2], t_cmd *infile_cmd);
 
 // execute
 void				execute(t_cmd *command, int pipes[][2]);
