@@ -6,7 +6,7 @@
 /*   By: zfarah <zfarah@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/11 20:12:52 by zfarah            #+#    #+#             */
-/*   Updated: 2025/06/13 13:35:46 by zfarah           ###   ########.fr       */
+/*   Updated: 2025/06/13 14:05:13 by zfarah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,8 @@ void	wait_for_child_processes(int *pids, int num_process, int *status)
 	while (++i < num_process)
 		waitpid(pids[i], status, 0);
 }
-void clean_up(t_list **cmd_list, int (*pipes)[2], int *pids)
+
+void	clean_up(t_list **cmd_list, int (*pipes)[2], int *pids)
 {
 	ft_lstclear(cmd_list, (void *)free_cmd);
 	free(pids);
@@ -43,7 +44,7 @@ int	main(int argc, char **argv, char **envp)
 	pids = ft_calloc(num_cmd - 1, sizeof(int));
 	if (!pids)
 		exit_err("Pipex: Failed to allocate resource", &cmd_list, ENOMEM);
-	pipes = malloc((num_cmd - 1) * sizeof(int[2]));
+	pipes = malloc((num_cmd - 1) * sizeof(int [2]));
 	if (!pipes)
 		exit_err("Pipex: Failed to allocate resource", &cmd_list, ENOMEM);
 	pipex(&cmd_list, pipes, pids);
