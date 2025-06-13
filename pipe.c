@@ -6,7 +6,7 @@
 /*   By: zfarah <zfarah@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/11 20:47:31 by zfarah            #+#    #+#             */
-/*   Updated: 2025/06/13 13:34:35 by zfarah           ###   ########.fr       */
+/*   Updated: 2025/06/13 14:08:55 by zfarah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ void	pipex(t_list **cmd_list, int (*pipes)[2], int *pids)
 		close_pipe(pipes[i++]);
 		tmp_cmd_list = tmp_cmd_list->next;
 	}
-	dump_to_outfile(tmp_cmd_list->content, pipes[i], ((t_cmd *)(*cmd_list)->content)->type);
+	dump_to_outfile(tmp_cmd_list->content, pipes[i], (*cmd_list)->content);
 }
 
 bool	map_stdin_to_pipe(char *limiter, int pipe[0], int num_pipes)
@@ -57,7 +57,8 @@ bool	map_stdin_to_pipe(char *limiter, int pipe[0], int num_pipes)
 		line = get_next_line(STDIN_FILENO);
 		if (!line)
 			return (false);
-		if (ft_strncmp(line, limiter, len_limitter) == 0 && !line[len_limitter + 1])
+		if (ft_strncmp(line, limiter, len_limitter) == 0
+			&& !line[len_limitter + 1])
 			break ;
 		if (write(pipe[1], line, ft_strlen(line)) < 0)
 		{
