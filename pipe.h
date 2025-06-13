@@ -6,7 +6,7 @@
 /*   By: zfarah <zfarah@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/11 21:33:38 by zfarah            #+#    #+#             */
-/*   Updated: 2025/06/12 18:14:58 by zfarah           ###   ########.fr       */
+/*   Updated: 2025/06/13 13:53:09 by zfarah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ bool cmds_validated(t_list *cmds);
 void validate_num_args(int argc, char **args);
 
 // pipe
-void				pipex(int num_cmd, t_list **cmd_list, int *pids);
+void				pipex(t_list **cmd_list, int (*pipes)[2], int *pids);
 
 // pipe utils
 void				close_pipe(int pipe[2]);
@@ -66,8 +66,7 @@ ssize_t				read_write_file(int fd, int write_fd);
 void				dump_to_outfile(t_cmd *cmd, int pipe[2], t_command_type infile_type);
 
 // execute
-void				execute(t_cmd *command, int pipes[][2], t_list **args,
-						int *pids);
+void				execute(t_cmd *command, int pipes[][2]);
 
 // error handler
 void				pipe_error(char *msg, int current_pipe[2],
@@ -75,5 +74,7 @@ void				pipe_error(char *msg, int current_pipe[2],
 void				exit_err(char *msg, t_list **cmd_list, int err_code);
 void	*set_errno(int err_code);
 char	*get_enum_type(t_command_type type);
+
+void clean_up(t_list **cmd_list, int (*pipes)[2], int *pids);
 
 #endif
