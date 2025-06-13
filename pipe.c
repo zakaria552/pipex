@@ -6,7 +6,7 @@
 /*   By: zfarah <zfarah@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/11 20:47:31 by zfarah            #+#    #+#             */
-/*   Updated: 2025/06/12 18:25:04 by zfarah           ###   ########.fr       */
+/*   Updated: 2025/06/13 13:34:35 by zfarah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,8 @@ static bool	map_infile_to_pipe(t_list **cmd_list, int pipe[2]);
 static bool	map_stdin_to_pipe(char *limiter, int pipe[0], int num_pipes);
 static bool	map_file_to_pipe(t_cmd *cmd, int pipe[2]);
 
-void	pipex(int num_cmd, t_list **cmd_list, int *pids)
+void	pipex(t_list **cmd_list, int (*pipes)[2], int *pids)
 {
-	int		pipes[2][2];
 	t_list	*tmp_cmd_list;
 	int		i;
 
@@ -35,11 +34,13 @@ void	pipex(int num_cmd, t_list **cmd_list, int *pids)
 		if (pids[i] < 0)
 			return (pipe_error("Pipex: ", pipes[i], pipes[i + 1]));
 		if (pids[i] == 0)
-			execute(tmp_cmd_list->content, pipes + i, cmd_list, pids);
+		{
+			execute(tmp_cmd_list->content, pipes + i);
+			clean_up(cmd_list, pipes, pids);
+			exit(errno);
+		}
 		close_pipe(pipes[i++]);
 		tmp_cmd_list = tmp_cmd_list->next;
-		if (i == 2)
-			i = 0;
 	}
 	dump_to_outfile(tmp_cmd_list->content, pipes[i], ((t_cmd *)(*cmd_list)->content)->type);
 }
@@ -94,14 +95,12 @@ bool	map_file_to_pipe(t_cmd *cmd, int pipe[2])
 bool	map_infile_to_pipe(t_list **cmd_list, int pipe[2])
 {
 	t_cmd	*cmd;
-	t_list	*tmp;
-	int		fd;
 
 	cmd = (*cmd_list)->content;
 	*cmd_list = (*cmd_list)->next;
 	if (cmd->type == HERE_DOC)
 		return (map_stdin_to_pipe(cmd->path_name, pipe, ft_lstsize(*cmd_list)
-				- 2));
+				- 1));
 	else
 		return (map_file_to_pipe(cmd, pipe));
 }
