@@ -6,7 +6,7 @@
 /*   By: zfarah <zfarah@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/12 14:49:04 by zfarah            #+#    #+#             */
-/*   Updated: 2025/06/13 14:00:33 by zfarah           ###   ########.fr       */
+/*   Updated: 2025/06/13 17:45:16 by zfarah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,10 +26,11 @@ char	*format_path(char *command, char **envp)
 		exc_path = ft_strdup(command);
 		if (!exc_path)
 			return (set_errno(ENOMEM));
-		if (access(command, X_OK) == 0)
+		if (access(exc_path, X_OK) == 0)
 			return (exc_path);
 		else
 		{
+			free(exc_path);
 			ft_printf("Pipex: %s: %s\n", strerror(errno), command);
 			return (set_errno(errno));
 		}
