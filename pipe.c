@@ -6,7 +6,7 @@
 /*   By: zfarah <zfarah@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/11 20:47:31 by zfarah            #+#    #+#             */
-/*   Updated: 2025/06/13 14:08:55 by zfarah           ###   ########.fr       */
+/*   Updated: 2025/06/13 15:48:02 by zfarah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,7 @@ bool	map_file_to_pipe(t_cmd *cmd, int pipe[2])
 	if (access(cmd->path_name, R_OK) < 0)
 	{
 		ft_printf("Pipex: %s: %s\n", strerror(errno), cmd->path_name);
+		errno = 0;
 		return (false);
 	}
 	fd = open(cmd->path_name, O_RDONLY);
