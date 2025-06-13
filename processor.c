@@ -6,7 +6,7 @@
 /*   By: zfarah <zfarah@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/11 20:17:10 by zfarah            #+#    #+#             */
-/*   Updated: 2025/06/12 16:54:54 by zfarah           ###   ########.fr       */
+/*   Updated: 2025/06/12 22:34:48 by zfarah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ t_list	*process_commands(char *cmd_arg, char **envp)
 		return set_errno(ENOMEM);
 	cmd->type = CMD;
 	cmd->envp = envp;
-	cmd->path_name = format_path(cmd->cmd[0], envp);
+	cmd->path_name = NULL;
 	processed = ft_lstnew(cmd);
 	return (processed);
 }
