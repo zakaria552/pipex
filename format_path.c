@@ -6,7 +6,7 @@
 /*   By: zfarah <zfarah@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/12 14:49:04 by zfarah            #+#    #+#             */
-/*   Updated: 2025/06/13 17:45:16 by zfarah           ###   ########.fr       */
+/*   Updated: 2025/06/13 19:36:46 by zfarah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ char	*format_path(char *command, char **envp)
 	char	**paths;
 	char	*exc_path;
 
-	if (ft_strchr(command, '/'))
+	if (command != NULL && ft_strchr(command, '/'))
 	{
 		exc_path = ft_strdup(command);
 		if (!exc_path)
@@ -69,7 +69,7 @@ char	*get_exc_path(char **paths, char *cmd)
 	int		i;
 
 	i = -1;
-	while (paths[++i])
+	while (cmd != NULL && paths[++i])
 	{
 		cmd_path = join_cmd_path(paths[i], cmd);
 		if (!cmd_path)
