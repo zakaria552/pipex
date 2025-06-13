@@ -6,7 +6,7 @@
 /*   By: zfarah <zfarah@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/11 20:14:00 by zfarah            #+#    #+#             */
-/*   Updated: 2025/06/13 14:11:52 by zfarah           ###   ########.fr       */
+/*   Updated: 2025/06/13 14:16:01 by zfarah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,9 +36,9 @@ ssize_t	read_write_file(int fd, int write_fd)
 
 void	dump_to_outfile(t_cmd *outfile_cmd, int pipe[2], t_cmd *infile_cmd)
 {
-	int	fd;
-	int	flags;
-	t_command_type infile_type;
+	int				fd;
+	int				flags;
+	t_command_type	infile_type;
 
 	infile_type = infile_cmd->type;
 	flags = O_CREAT | O_WRONLY | O_APPEND;
