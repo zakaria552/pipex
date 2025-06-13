@@ -6,7 +6,7 @@
 /*   By: zfarah <zfarah@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/11 21:31:32 by zfarah            #+#    #+#             */
-/*   Updated: 2025/06/12 13:57:02 by zfarah           ###   ########.fr       */
+/*   Updated: 2025/06/12 20:07:13 by zfarah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@ void	pipe_error(char *msg, int current_pipe[2], int next_pipe[2])
 		close_pipe(current_pipe);
 	if (next_pipe)
 		close_pipe(next_pipe);
+	if (msg)
+		perror(msg);
 	perror("Pipex: %s");
 }
 

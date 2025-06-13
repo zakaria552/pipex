@@ -6,7 +6,7 @@
 /*   By: zfarah <zfarah@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/11 20:18:38 by zfarah            #+#    #+#             */
-/*   Updated: 2025/06/12 18:19:06 by zfarah           ###   ########.fr       */
+/*   Updated: 2025/06/12 20:07:54 by zfarah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ void validate_num_args(int argc, char **args)
 	if (argc > 1 && ft_strncmp(args[1], "here_doc", ft_strlen("here_doc")) == 0)
 		is_here_doc = true;
 	else 
-		false;
+		is_here_doc = false;
 
 	if (is_here_doc && argc - 1 < 5)
 		exit_err("Pipex: Usage ./pipex here_doc LIMITER cmd1 cmd2 ... outfile", NULL, EINVAL);
