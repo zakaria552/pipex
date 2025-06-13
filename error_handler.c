@@ -6,7 +6,7 @@
 /*   By: zfarah <zfarah@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/11 21:31:32 by zfarah            #+#    #+#             */
-/*   Updated: 2025/06/12 20:07:13 by zfarah           ###   ########.fr       */
+/*   Updated: 2025/06/13 13:58:31 by zfarah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,5 +36,5 @@ void	exit_err(char *msg, t_list **cmd_list, int err_code)
 void	*set_errno(int err_code)
 {
 	errno = err_code;
-	return NULL;
+	return (NULL);
 }
