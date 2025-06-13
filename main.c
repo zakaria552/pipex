@@ -6,7 +6,7 @@
 /*   By: zfarah <zfarah@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/11 20:12:52 by zfarah            #+#    #+#             */
-/*   Updated: 2025/06/13 17:55:22 by zfarah           ###   ########.fr       */
+/*   Updated: 2025/06/13 20:07:49 by zfarah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,6 @@ int	main(int argc, char **argv, char **envp)
 	wait_for_child_processes(pids, num_cmd - 2, &status);
 	clean_up(&cmd_list, pipes, pids);
 	if (errno > 0)
-		return errno;
+		return (errno);
 	return (WEXITSTATUS(status));
 }
