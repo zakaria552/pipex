@@ -6,7 +6,7 @@
 /*   By: zfarah <zfarah@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/11 21:25:07 by zfarah            #+#    #+#             */
-/*   Updated: 2025/06/13 13:26:35 by zfarah           ###   ########.fr       */
+/*   Updated: 2025/06/13 13:59:21 by zfarah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,13 @@
 
 void	execute(t_cmd *command, int pipes[][2])
 {
-	int			*current_pipe;
-	int			*next_pipe;
-	char		*path;
-	
+	int		*current_pipe;
+	int		*next_pipe;
+	char	*path;
+
 	path = format_path(*(command->cmd), command->envp);
 	if (!path)
-		return;
+		return ;
 	current_pipe = pipes[0];
 	next_pipe = pipes[1];
 	if (dup2(current_pipe[0], STDIN_FILENO) < 0 || dup2(next_pipe[1],
