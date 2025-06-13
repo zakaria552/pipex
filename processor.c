@@ -6,7 +6,7 @@
 /*   By: zfarah <zfarah@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/11 20:17:10 by zfarah            #+#    #+#             */
-/*   Updated: 2025/06/12 22:34:48 by zfarah           ###   ########.fr       */
+/*   Updated: 2025/06/13 14:15:42 by zfarah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,10 +48,10 @@ t_list	*process_commands(char *cmd_arg, char **envp)
 
 	cmd = malloc(sizeof(t_cmd));
 	if (!cmd)
-		return set_errno(ENOMEM);
+		return (set_errno(ENOMEM));
 	cmd->cmd = ft_split(cmd_arg, ' ');
 	if (!cmd->cmd)
-		return set_errno(ENOMEM);
+		return (set_errno(ENOMEM));
 	cmd->type = CMD;
 	cmd->envp = envp;
 	cmd->path_name = NULL;
