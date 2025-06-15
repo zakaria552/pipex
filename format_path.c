@@ -6,7 +6,7 @@
 /*   By: zfarah <zfarah@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/12 14:49:04 by zfarah            #+#    #+#             */
-/*   Updated: 2025/06/13 19:36:46 by zfarah           ###   ########.fr       */
+/*   Updated: 2025/06/15 14:32:44 by zfarah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,27 +15,28 @@
 static char	*join_cmd_path(char *env_path, char *cmd);
 static char	*get_exc_path(char **paths, char *cmd);
 static char	*get_env_variable(char **envp, char *variable);
+static char *command_exist(char *path);
 
 char	*format_path(char *command, char **envp)
 {
 	char	**paths;
+	char	*path;
 	char	*exc_path;
 
 	if (command != NULL && ft_strchr(command, '/'))
 	{
-		exc_path = ft_strdup(command);
+		exc_path = command_exist(command);
 		if (!exc_path)
-			return (set_errno(ENOMEM));
-		if (access(exc_path, X_OK) == 0)
-			return (exc_path);
-		else
-		{
-			free(exc_path);
-			ft_printf("Pipex: %s: %s\n", strerror(errno), command);
-			return (set_errno(errno));
-		}
+			return NULL;
+		return (exc_path);
 	}
-	paths = ft_split(get_env_variable(envp, "PATH="), ':');
+	path = get_env_variable(envp, "PATH=");
+	if (!path)
+	{
+		ft_printf("Pipex: command not found: %s\n", command);
+		return NULL;
+	}
+	paths = ft_split(path, ':');
 	if (!paths)
 		return (set_errno(ENOMEM));
 	exc_path = get_exc_path(paths, command);
@@ -95,4 +96,19 @@ char	*get_env_variable(char **envp, char *variable)
 			return (envp[i] + len);
 	}
 	return (NULL);
+}
+
+char *command_exist(char *path)
+{
+	char *dup_path;
+	
+	if (access(path, X_OK) < 0)
+	{
+		ft_printf("Pipex: %s: %s\n", strerror(errno), path);
+		return (set_errno(errno));
+	}
+	dup_path = ft_strdup(path);
+	if (!dup_path)
+		return (set_errno(ENOMEDIUM));
+	return (dup_path);
 }
