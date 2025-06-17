@@ -6,7 +6,7 @@
 /*   By: zfarah <zfarah@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/11 20:12:52 by zfarah            #+#    #+#             */
-/*   Updated: 2025/06/13 20:07:49 by zfarah           ###   ########.fr       */
+/*   Updated: 2025/06/17 17:10:22 by zfarah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ int	main(int argc, char **argv, char **envp)
 	int		status;
 	int		(*pipes)[2];
 
-	validate_num_args(argc, argv);
+	validate_num_args(argc);
 	cmd_list = process(argc, argv, envp);
 	if (!cmd_list)
 		exit_err(NULL, NULL, errno);

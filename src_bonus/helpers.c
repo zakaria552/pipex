@@ -6,11 +6,11 @@
 /*   By: zfarah <zfarah@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/11 21:23:03 by zfarah            #+#    #+#             */
-/*   Updated: 2025/06/12 16:50:51 by zfarah           ###   ########.fr       */
+/*   Updated: 2025/06/17 17:29:48 by zfarah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "pipe.h"
+#include "pipe_bonus.h"
 
 char	*get_enum_type(t_command_type type)
 {

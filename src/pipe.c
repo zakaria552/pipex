@@ -6,14 +6,13 @@
 /*   By: zfarah <zfarah@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/11 20:47:31 by zfarah            #+#    #+#             */
-/*   Updated: 2025/06/13 15:48:02 by zfarah           ###   ########.fr       */
+/*   Updated: 2025/06/17 17:04:54 by zfarah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipe.h"
 
 static bool	map_infile_to_pipe(t_list **cmd_list, int pipe[2]);
-static bool	map_stdin_to_pipe(char *limiter, int pipe[0], int num_pipes);
 static bool	map_file_to_pipe(t_cmd *cmd, int pipe[2]);
 
 void	pipex(t_list **cmd_list, int (*pipes)[2], int *pids)
@@ -100,9 +99,5 @@ bool	map_infile_to_pipe(t_list **cmd_list, int pipe[2])
 
 	cmd = (*cmd_list)->content;
 	*cmd_list = (*cmd_list)->next;
-	if (cmd->type == HERE_DOC)
-		return (map_stdin_to_pipe(cmd->path_name, pipe, ft_lstsize(*cmd_list)
-				- 1));
-	else
-		return (map_file_to_pipe(cmd, pipe));
+	return (map_file_to_pipe(cmd, pipe));
 }
