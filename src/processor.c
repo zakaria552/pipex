@@ -6,7 +6,7 @@
 /*   By: zfarah <zfarah@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/11 20:17:10 by zfarah            #+#    #+#             */
-/*   Updated: 2025/06/13 14:15:42 by zfarah           ###   ########.fr       */
+/*   Updated: 2025/06/17 17:19:44 by zfarah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 static t_list	*process_commands(char *command, char **envp);
 static t_list	*process_infile(char **args, int *index, t_command_type type);
-t_command_type	get_cmd_type(char **args, int argc, int index);
+t_command_type	get_cmd_type(int argc, int index);
 
 t_list	*process(int argc, char **args, char **envp)
 {
@@ -27,8 +27,7 @@ t_list	*process(int argc, char **args, char **envp)
 	while (++i < argc)
 	{
 		if (i == 1 || i == argc - 1)
-			new_cmd_node = process_infile(args, &i, get_cmd_type(args, argc,
-						i));
+			new_cmd_node = process_infile(args, &i, get_cmd_type(argc,i));
 		else
 			new_cmd_node = process_commands(args[i], envp);
 		if (!new_cmd_node)
@@ -66,8 +65,6 @@ t_list	*process_infile(char **args, int *index, t_command_type type)
 
 	cmd = malloc(sizeof(t_cmd));
 	cmd->type = type;
-	if (type == HERE_DOC)
-		*index += 1;
 	cmd->path_name = ft_strdup(args[*index]);
 	cmd->cmd = NULL;
 	cmd->envp = NULL;
@@ -75,13 +72,10 @@ t_list	*process_infile(char **args, int *index, t_command_type type)
 	return (processed);
 }
 
-t_command_type	get_cmd_type(char **args, int argc, int index)
+t_command_type	get_cmd_type(int argc, int index)
 {
 	if (index == argc - 1)
 		return (OUTFILE);
-	else if (index == 1 && !ft_strncmp(args[index], "here_doc",
-			ft_strlen("here_doc")))
-		return (HERE_DOC);
 	else
 		return (INFILE);
 }

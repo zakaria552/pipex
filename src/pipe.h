@@ -6,14 +6,14 @@
 /*   By: zfarah <zfarah@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/11 21:33:38 by zfarah            #+#    #+#             */
-/*   Updated: 2025/06/13 14:37:19 by zfarah           ###   ########.fr       */
+/*   Updated: 2025/06/17 17:18:22 by zfarah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PIPE_H
 # define PIPE_H
 
-# include "./libft/libft.h"
+# include "../libft/libft.h"
 # include <errno.h>
 # include <fcntl.h>
 # include <stdio.h>
@@ -24,7 +24,6 @@
 typedef enum s_cmd_type
 {
 	INFILE,
-	HERE_DOC,
 	OUTFILE,
 	CMD,
 }					t_command_type;
@@ -47,7 +46,7 @@ char				*format_path(char *command, char **envp);
 void				free_cmd(t_cmd *cmd);
 void				*free_matrix_mem(char **matrix);
 bool				cmds_validated(t_list *cmds);
-void				validate_num_args(int argc, char **args);
+void				validate_num_args(int argc);
 
 // pipe
 void				pipex(t_list **cmd_list, int (*pipes)[2], int *pids);
