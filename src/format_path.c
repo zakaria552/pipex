@@ -1,0 +1,114 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   format_path.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: zfarah <zfarah@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/06/12 14:49:04 by zfarah            #+#    #+#             */
+/*   Updated: 2025/08/11 10:38:17 by zfarah           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "pipe.h"
+
+static char	*join_cmd_path(char *env_path, char *cmd);
+static char	*get_exc_path(char **paths, char *cmd);
+static char	*get_env_variable(char **envp, char *variable);
+static char	*command_exist(char *path);
+
+char	*format_path(char *command, char **envp)
+{
+	char	**paths;
+	char	*path;
+	char	*exc_path;
+
+	if (command != NULL && ft_strchr(command, '/'))
+	{
+		exc_path = command_exist(command);
+		if (!exc_path)
+			return (NULL);
+		return (exc_path);
+	}
+	path = get_env_variable(envp, "PATH=");
+	if (!path)
+	{
+		ft_printf("Pipex: command not found: %s\n", command);
+		return (NULL);
+	}
+	paths = ft_split(path, ':');
+	if (!paths)
+		return (set_errno(ENOMEM));
+	exc_path = get_exc_path(paths, command);
+	if (!exc_path)
+		ft_printf("Pipex: command not found: %s\n", command);
+	free_matrix_mem(paths);
+	return (exc_path);
+}
+
+static char	*join_cmd_path(char *env_path, char *cmd)
+{
+	size_t	len_env_path;
+	size_t	len_cmd;
+	char	*joint;
+
+	len_cmd = ft_strlen(cmd);
+	len_env_path = ft_strlen(env_path);
+	joint = malloc(sizeof(char) * (len_env_path + len_cmd + 2));
+	if (!joint)
+		return (NULL);
+	ft_memcpy(joint, env_path, len_env_path);
+	ft_memcpy(joint + len_env_path, "/", 1);
+	ft_memcpy(joint + len_env_path + 1, cmd, len_cmd);
+	joint[len_cmd + len_env_path + 1] = '\0';
+	return (joint);
+}
+
+static char	*get_exc_path(char **paths, char *cmd)
+{
+	char	*cmd_path;
+	int		i;
+
+	i = -1;
+	while (cmd != NULL && paths[++i])
+	{
+		cmd_path = join_cmd_path(paths[i], cmd);
+		if (!cmd_path)
+			return (set_errno(ENOMEM));
+		if (access(cmd_path, X_OK) == 0)
+			return (cmd_path);
+		free(cmd_path);
+	}
+	errno = EKEYEXPIRED;
+	return (NULL);
+}
+
+static char	*get_env_variable(char **envp, char *variable)
+{
+	size_t	len;
+	int		i;
+
+	len = ft_strlen(variable);
+	i = -1;
+	while (envp[++i])
+	{
+		if (ft_strncmp(envp[i], variable, len) == 0)
+			return (envp[i] + len);
+	}
+	return (NULL);
+}
+
+static char	*command_exist(char *path)
+{
+	char	*dup_path;
+
+	if (access(path, X_OK) < 0)
+	{
+		ft_printf("Pipex: %s: %s\n", strerror(errno), path);
+		return (set_errno(errno));
+	}
+	dup_path = ft_strdup(path);
+	if (!dup_path)
+		return (set_errno(ENOMEM));
+	return (dup_path);
+}
