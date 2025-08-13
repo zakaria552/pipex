@@ -1,9 +1,9 @@
+# Pipex
+## Overview
 
-# Overview
+This project focuses on system-level programming and reimplementing the behavior of Unix pipelines using the C programming language. The goal is to deepen understanding of core Unix concepts by mimicking shell behavior for command piping.
 
-The pipex project is a system-level programming exercise focused on reimplementing the behavior of Unix pipelines using C. The goal is to deepen understanding of core Unix concepts by mimicking shell behavior for command piping ```(e.g., cmd1 | cmd2 | cmd3 ...)```.
-
-This project covers essential topics in Unix programming, including:
+It covers essential topics in Unix programming, including:
 
 - Process creation
 - Inter-process communication (IPC) using pipes
